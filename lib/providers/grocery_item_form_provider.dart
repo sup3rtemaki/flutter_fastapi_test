@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fastapi_test/models/grocery_item.dart';
+import 'package:flutter_fastapi_test/services/grocery_item_service.dart';
 
 abstract class GroceryItemFormProvider extends ChangeNotifier {
   GroceryItem _groceryItem = GroceryItem();
@@ -21,6 +22,7 @@ abstract class GroceryItemFormProvider extends ChangeNotifier {
 
   //Values
   void setName(String name);
+  void setCategory(Category? category);
 }
 
 class GroceryItemFormProviderImplementation extends GroceryItemFormProvider {
@@ -59,13 +61,7 @@ class GroceryItemFormProviderImplementation extends GroceryItemFormProvider {
     }
     _isProcessing = true;
     this.handleUpdate();
-    await Future.delayed(const Duration(milliseconds: 500));
-    final newGroceryItem = GroceryItem.fromJson({
-      'id': 99,
-      'name': this._groceryItem.name,
-      'category': 'misc',
-      'is_purchased': false
-    });
+    final newGroceryItem = await groceryItemService.create(this._groceryItem.name, Category.Misc);
     _isProcessing = false;
     this.handleUpdate();
     return newGroceryItem;
@@ -82,6 +78,12 @@ class GroceryItemFormProviderImplementation extends GroceryItemFormProvider {
   @override
   void setName(String name) {
     this._groceryItem.name = name;
+    this.handleUpdate();
+  }
+
+  @override
+  void setCategory(Category? category) {
+    this._groceryItem.category = category;
     this.handleUpdate();
   }
 }

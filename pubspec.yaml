@@ -30,6 +30,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_riverpod: ^0.14.0+3
   get_it: ^7.2.0
+  select_form_field: ^2.2.0
 
 dev_dependencies:
   flutter_test:

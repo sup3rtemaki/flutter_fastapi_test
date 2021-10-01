@@ -4,13 +4,25 @@ import 'package:flutter_fastapi_test/models/grocery_item.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class GroceryItemService{
+
   Future<List<GroceryItem>> list() async {
 
     final data = groceryItems;
     await Future.delayed(const Duration(milliseconds: 1000));
     final List<GroceryItem> results = data.map<GroceryItem>((json) => GroceryItem.fromJson(json)).toList();
-    // return [];
     return results;
+  }
+
+  Future<GroceryItem> create(String name, Category category) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    final groceryItem = GroceryItem.fromJson({
+      'id': 99,
+      'name': name,
+      'category': GroceryItem.stringFromCategory(category),
+      'is_purchased': false
+    });
+
+    return groceryItem;
   }
 }
 

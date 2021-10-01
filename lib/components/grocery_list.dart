@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fastapi_test/models/grocery_item.dart';
+import 'package:flutter_fastapi_test/providers/grocery_list_provider.dart';
 import 'package:flutter_fastapi_test/services/grocery_item_service.dart';
 import 'package:flutter_fastapi_test/theme.dart';
 
+import '../main.dart';
 import 'empty_list_indicator.dart';
 import 'grocery_item_card.dart';
 
@@ -17,44 +19,37 @@ class GroceryList extends StatefulWidget {
 
 class _GroceryListState extends State<GroceryList> {
 
-  List<GroceryItem> _items = [];
-  bool _loading = false;
+  final listProvider = getIt<GroceryListProvider>();
 
   @override
   void initState() {
     super.initState();
-    _init();
+
+    listProvider.addListener(() {
+      setStateIfMounted(() {});
+    });
   }
 
-  Future<void> _init() async {
-    _loadData();
-  }
-
-  Future<void> _loadData() async {
-    setState(() {
-      _loading = true;
-    });
-    final items = await groceryItemService.list();
-    setState(() {
-      _items = items;
-      _loading = false;
-    });
+  void setStateIfMounted(f) {
+    if (mounted) setState(f);
   }
 
   Future<void> _refreshData() async {
-    _loadData();
+    //_loadData();
   }
 
   @override
   Widget build(BuildContext context) {
 
-    if(_loading){
+    final items = listProvider.items;
+
+    if(!listProvider.ready){
       return Center(
         child: CircularProgressIndicator(),
       );
     }
 
-    if(_items.length == 0){
+    if(items.length == 0){
       return Center(
         child: EmptyListIndicator(
           title: "No Grocery items",
@@ -67,9 +62,9 @@ class _GroceryListState extends State<GroceryList> {
     return RefreshIndicator(
       onRefresh: _refreshData,
       child: ListView.builder(
-          itemCount: _items.length,
+          itemCount: items.length,
           itemBuilder: (ctx, index) {
-            final item = _items[index];
+            final item = items[index];
             return GroceryitemCard(groceryItem: item);
           }
       ),
