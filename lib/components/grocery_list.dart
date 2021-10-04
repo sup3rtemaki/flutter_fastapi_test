@@ -64,6 +64,7 @@ class _GroceryListState extends State<GroceryList> {
       child: ListView.builder(
           itemCount: items.length,
           itemBuilder: (ctx, index) {
+            final temp = listProvider.groupedItems;
             final item = items[index];
             return GroceryitemCard(groceryItem: item);
           }

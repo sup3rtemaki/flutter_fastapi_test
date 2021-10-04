@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_fastapi_test/models/grocery_item.dart';
 import 'package:flutter_fastapi_test/services/grocery_item_service.dart';
 
+import '../main.dart';
+import 'grocery_list_provider.dart';
+
 abstract class GroceryItemFormProvider extends ChangeNotifier {
   GroceryItem _groceryItem = GroceryItem();
   bool _isProcessing = false;
@@ -14,7 +17,8 @@ abstract class GroceryItemFormProvider extends ChangeNotifier {
 
   //Operations
   void clearItem();
-  loadItem(GroceryItem item);
+  void setItem(GroceryItem item);
+  void loadItem(GroceryItem item);
   Future<GroceryItem?> saveItem();
 
   //Validation
@@ -33,6 +37,12 @@ class GroceryItemFormProviderImplementation extends GroceryItemFormProvider {
   }
 
   @override
+  void setItem(GroceryItem item) {
+    this._groceryItem = item;
+    this.handleUpdate();
+  }
+
+  @override
   void clearItem() {
     this._groceryItem = GroceryItem();
     this.handleUpdate();
@@ -48,7 +58,7 @@ class GroceryItemFormProviderImplementation extends GroceryItemFormProvider {
   bool get isProcessing => _isProcessing;
 
   @override
-  loadItem(GroceryItem item) {
+  void loadItem(GroceryItem item) {
     this._groceryItem = item;
     this.handleUpdate();
   }
@@ -59,9 +69,23 @@ class GroceryItemFormProviderImplementation extends GroceryItemFormProvider {
       this.handleUpdate();
       return null;
     }
+
+    bool isNew = false;
+    if(this._groceryItem.id == null){
+      isNew = true;
+    }
+
     _isProcessing = true;
     this.handleUpdate();
-    final newGroceryItem = await groceryItemService.create(this._groceryItem.name, Category.Misc);
+    final newGroceryItem = await groceryItemService.create(
+        this._groceryItem.name,
+        this._groceryItem.category,
+    );
+
+    if(isNew){
+      getIt<GroceryListProvider>().addItem(newGroceryItem);
+    }
+
     _isProcessing = false;
     this.handleUpdate();
     return newGroceryItem;

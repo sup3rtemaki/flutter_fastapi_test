@@ -13,12 +13,12 @@ class GroceryItemService{
     return results;
   }
 
-  Future<GroceryItem> create(String name, Category category) async {
+  Future<GroceryItem> create(String name, Category? category) async {
     await Future.delayed(const Duration(milliseconds: 500));
     final groceryItem = GroceryItem.fromJson({
       'id': 99,
       'name': name,
-      'category': GroceryItem.stringFromCategory(category),
+      'category': category != null ? GroceryItem.stringFromCategory(category) : null,
       'is_purchased': false
     });
 
