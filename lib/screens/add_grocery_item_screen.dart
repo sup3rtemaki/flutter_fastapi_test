@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_fastapi_test/models/grocery_item.dart';
 import 'package:flutter_fastapi_test/providers/grocery_item_form_provider.dart';
 import 'package:flutter_fastapi_test/providers/grocery_list_provider.dart';
+import 'package:flutter_fastapi_test/services/toast_service.dart';
 import 'package:select_form_field/select_form_field.dart';
 
 import '../main.dart';
@@ -40,11 +41,9 @@ class _AddGroceryItemScreenState extends State<AddGroceryItemScreen> {
     final newItem = await formProvider.saveItem();
 
     if (newItem != null) {
-      // getIt<GroceryListProvider>().addItem(newItem);
       Navigator.of(context).pop();
     } else {
-      //TODO Show error
-      print("Error");
+      ToastService.error("A problem occurred");
     }
   }
 
@@ -64,7 +63,7 @@ class _AddGroceryItemScreenState extends State<AddGroceryItemScreen> {
     final List<Map<String, dynamic>> _categories = categories.map((category) {
       return {
         'value': GroceryItem.stringFromCategory(category),
-        'label': GroceryItem.stringFromCategory(category),
+        'label': GroceryItem.stringFromCategory(category)!.toUpperCase(),
       };
     }).toList();
 
@@ -106,7 +105,9 @@ class _AddGroceryItemScreenState extends State<AddGroceryItemScreen> {
                     labelText: 'Category',
                     items: _categories,
                     onChanged: (val) {
-                      formProvider.setCategory(GroceryItem.categoryFromString(val));
+                      formProvider.setCategory(
+                          GroceryItem.categoryFromString(val)
+                      );
                     },
                     onSaved: (val) => print(val),
                   ),

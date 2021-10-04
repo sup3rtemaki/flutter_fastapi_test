@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fastapi_test/models/grocery_item.dart';
 import 'package:flutter_fastapi_test/services/grocery_item_service.dart';
+import 'package:flutter_fastapi_test/services/toast_service.dart';
 
 import '../main.dart';
 import 'grocery_list_provider.dart';
@@ -83,7 +84,11 @@ class GroceryItemFormProviderImplementation extends GroceryItemFormProvider {
     );
 
     if(isNew){
+      ToastService.success("${newGroceryItem.name} Added");
       getIt<GroceryListProvider>().addItem(newGroceryItem);
+    }
+    else {
+      ToastService.success("${newGroceryItem.name} Updated");
     }
 
     _isProcessing = false;

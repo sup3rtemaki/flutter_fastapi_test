@@ -7,17 +7,21 @@ import 'package:flutter_fastapi_test/screens/add_grocery_item_screen.dart';
 import 'package:flutter_fastapi_test/theme.dart';
 import 'package:flutter_fastapi_test/main.dart';
 
-class GroceryitemCard extends StatefulWidget {
-
+class GroceryItemCard extends StatefulWidget {
   final GroceryItem groceryItem;
+  final Function onUpdate;
 
-  const GroceryitemCard({Key? key, required this.groceryItem}) : super(key: key);
+  const GroceryItemCard({
+    Key? key,
+    required this.groceryItem,
+    required this .onUpdate,
+  }) : super(key: key);
 
   @override
-  _GroceryitemCardState createState() => _GroceryitemCardState();
+  _GroceryItemCardState createState() => _GroceryItemCardState();
 }
 
-class _GroceryitemCardState extends State<GroceryitemCard> {
+class _GroceryItemCardState extends State<GroceryItemCard> {
 
   final listProvider = getIt<GroceryListProvider>();
 
@@ -25,6 +29,7 @@ class _GroceryitemCardState extends State<GroceryitemCard> {
     getIt<GroceryItemFormProvider>().setItem(this.widget.groceryItem);
     await Navigator.of(context).pushNamed(AddGroceryItemScreen.routeName);
     setState(() {});
+    widget.onUpdate();
   }
 
   @override
@@ -69,14 +74,19 @@ class _GroceryitemCardState extends State<GroceryitemCard> {
                         widget.groceryItem.name,
                         style: ThemeText.bodyText,
                       ),
-                      Text(
-                        widget.groceryItem.categoryLabel,
-                        style: ThemeText.caption,
-                      )
+                      // Text(
+                      //   widget.groceryItem.categoryLabel,
+                      //   style: ThemeText.caption,
+                      // )
                     ],
                   ),
                 ),
-                GroceryItemCheckbox(groceryItem: widget.groceryItem),
+                GroceryItemCheckbox(
+                  groceryItem: widget.groceryItem,
+                  onUpdate: (){
+                    widget.onUpdate();
+                  },
+                ),
               ],
             ),
           )

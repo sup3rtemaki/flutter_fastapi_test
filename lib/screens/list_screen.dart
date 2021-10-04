@@ -17,6 +17,8 @@ class _ListScreenState extends State<ListScreen> {
 
   final listProvider = getIt<GroceryListProvider>();
 
+  bool hidePurchased = false;
+
   void _handleAddItem() {
     getIt<GroceryItemFormProvider>().clearItem();
     Navigator.of(context).pushNamed(AddGroceryItemScreen.routeName);
@@ -40,6 +42,16 @@ class _ListScreenState extends State<ListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("My List"),
+        actions: [
+          IconButton(
+            onPressed: (){
+              setState(() {
+                hidePurchased = !hidePurchased;
+              });
+            },
+            icon: Icon(hidePurchased ? Icons.remove_red_eye_outlined : Icons.remove_red_eye),
+          )
+        ]
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _handleAddItem,
@@ -48,7 +60,8 @@ class _ListScreenState extends State<ListScreen> {
         ),
       ),
       body: GroceryList(
-        handleAddItem: _handleAddItem
+        handleAddItem: _handleAddItem,
+        hidePurchased: hidePurchased,
       ),
     );
   }
