@@ -36,7 +36,7 @@ class _GroceryListState extends State<GroceryList> {
   }
 
   Future<void> _refreshData() async {
-    //_loadData();
+    await listProvider.fetchItems();
   }
 
   @override

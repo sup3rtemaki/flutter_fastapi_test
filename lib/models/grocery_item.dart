@@ -9,13 +9,13 @@ enum Category{
 }
 
 const GroceryItemCategoryMap = {
-  Category.Produce: 'produce',
-  Category.Bakery: 'bakery',
-  Category.Dairy: 'dairy',
-  Category.Frozen: 'frozen',
-  Category.Aisle: 'aisle',
-  Category.Household: 'household',
-  Category.Misc: 'misc',
+  Category.Produce: 'hortifruti',
+  Category.Bakery: 'padaria',
+  Category.Dairy: 'laticinios',
+  Category.Frozen: 'congelados',
+  Category.Aisle: 'naopereciveis',
+  Category.Household: 'limpeza',
+  Category.Misc: 'geral',
 };
 
 class GroceryItem{
@@ -47,7 +47,7 @@ class GroceryItem{
 
   get categoryValue {
     if(this.category == null){
-      return "misc";
+      return "geral";
     }
 
     return GroceryItem.stringFromCategory(this.category!);

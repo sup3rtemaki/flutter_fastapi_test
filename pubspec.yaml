@@ -32,6 +32,8 @@ dependencies:
   get_it: ^7.2.0
   select_form_field: ^2.2.0
   fluttertoast: ^8.0.8
+  dio: ^4.0.0
+  http: ^0.13.3
 
 dev_dependencies:
   flutter_test:

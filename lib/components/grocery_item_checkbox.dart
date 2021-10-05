@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fastapi_test/models/grocery_item.dart';
+import 'package:flutter_fastapi_test/services/grocery_item_service.dart';
 
 class GroceryItemCheckbox extends StatefulWidget {
 
@@ -20,6 +21,12 @@ class _GroceryItemCheckboxState extends State<GroceryItemCheckbox> {
         widget.groceryItem.purchased = !widget.groceryItem.purchased;
         setState(() {});
         widget.onUpdate();
+        if(widget.groceryItem.purchased){
+          groceryItemService.purchaseItem(widget.groceryItem);
+        }
+        else {
+          groceryItemService.unpurchaseItem(widget.groceryItem);
+        }
       },
       icon: Icon(
           widget.groceryItem.purchased ? Icons.check_box_outlined : Icons.check_box_outline_blank

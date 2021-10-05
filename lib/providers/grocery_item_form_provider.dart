@@ -71,23 +71,27 @@ class GroceryItemFormProviderImplementation extends GroceryItemFormProvider {
       return null;
     }
 
+    _isProcessing = true;
+    this.handleUpdate();
+
     bool isNew = false;
     if(this._groceryItem.id == null){
       isNew = true;
     }
 
-    _isProcessing = true;
-    this.handleUpdate();
-    final newGroceryItem = await groceryItemService.create(
-        this._groceryItem.name,
-        this._groceryItem.category,
-    );
+    GroceryItem? newGroceryItem;
 
     if(isNew){
+      newGroceryItem = await groceryItemService.create(
+        this._groceryItem.name,
+        this._groceryItem.category,
+      );
+
       ToastService.success("${newGroceryItem.name} Added");
       getIt<GroceryListProvider>().addItem(newGroceryItem);
     }
     else {
+      final newGroceryItem = await groceryItemService.updateItem(this._groceryItem.id!, this._groceryItem);
       ToastService.success("${newGroceryItem.name} Updated");
     }
 
